@@ -3,6 +3,23 @@ window.onload = function()
 	var dictionary = {};
 
 	var commands = {
+		'append':function(name,definition,source)
+		{
+			dictionary[name].def += definition;
+			if(typeof source !== 'undefined')
+			{
+				dictionary[name].src += source;
+			}	
+		},
+
+		'clear':function()
+		{
+			[...document.getElementsByClassName('search-result')].forEach(function(el)
+					{
+						document.body.removeChild(el);
+					});
+		},
+
 		'define':function(name,definition,source)
 		{
 			dictionary[name] = {};
@@ -13,21 +30,9 @@ window.onload = function()
 			}
 		},
 
-		'clear':function()
+		'load':function()
 		{
-			document.getElementsByClassName('search-result').forEach(function(el)
-					{
-						document.body.removeChild(el);
-					});
-		},
-
-		'whatis':function(name)
-		{
-			if(typeof dictionary[name] !== 'undefined')
-			{
-				var source = (typeof dictionary[name].src === 'undefined') ? '' : dictionary[name].src;
-				generate_search_result(name + ' ' + source,dictionary[name].def);
-			}
+			document.getElementById('filereader').click();
 		},
 
 		'save':function(filename)
@@ -41,9 +46,13 @@ window.onload = function()
 			document.body.removeChild(el);
 		},
 
-		'load':function()
+		'whatis':function(name)
 		{
-			document.getElementById('filereader').click();
+			if(typeof dictionary[name] !== 'undefined')
+			{
+				var source = (typeof dictionary[name].src === 'undefined') ? '' : dictionary[name].src;
+				generate_search_result(name + ' ' + source,dictionary[name].def);
+			}
 		}
 	}
 
@@ -131,7 +140,10 @@ window.onload = function()
 				if(tokens.length > 1)
 				{
 					var args = tokens.slice(1);
-					commands[cmd].apply(null,args);
+					if(typeof commands[cmd] !== 'undefined')
+					{
+						commands[cmd].apply(null,args);
+					}
 				}
 				else{commands[cmd]();}
 			}
