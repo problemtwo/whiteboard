@@ -30,6 +30,17 @@ window.onload = function()
 			}
 		},
 
+		'erase':function(arg)
+		{
+			[...document.getElementsByClassName('search-result')].forEach(function(el)
+					{
+						if(el.children[0].innerHTML.trim() === arg.trim())
+						{
+							document.body.removeChild(el);
+						}
+					});
+		},
+
 		'load':function()
 		{
 			document.getElementById('filereader').click();
